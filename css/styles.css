@@ -1245,11 +1245,7 @@ input, select, textarea {
 @keyframes cardCascadeDown {
   0% {
     opacity: 0;
-    transform: translateY(-34px);
-  }
-  60% {
-    opacity: 0.9;
-    transform: translateY(3px);
+    transform: translateY(-14px);
   }
   100% {
     opacity: 1;
@@ -1258,8 +1254,8 @@ input, select, textarea {
 }
 
 .product-card.cascade-in {
-  animation: cardCascadeDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: calc(var(--item-idx, 0) * 0.055s);
+  animation: cardCascadeDown 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--item-idx, 0) * 0.04s);
   will-change: transform, opacity;
 }
 
@@ -2110,12 +2106,18 @@ input, select, textarea {
    ========================================================================== */
 .reveal-on-scroll {
   opacity: 0;
-  transform: translateY(-30px);
-  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(-14px);
+  transition: opacity 0.95s cubic-bezier(0.22, 1, 0.36, 1), transform 0.95s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, transform;
 }
 
 .reveal-on-scroll.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hero section is immediately visible without jumping on initial page load */
+.hero-section.reveal-on-scroll {
   opacity: 1;
   transform: translateY(0);
 }

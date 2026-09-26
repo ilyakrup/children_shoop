@@ -434,11 +434,18 @@ function initScrollReveal() {
         }
       });
     }, {
-      threshold: 0.08,
-      rootMargin: '0px 0px -40px 0px'
+      threshold: 0.02,
+      rootMargin: '0px 0px -10px 0px'
     });
 
-    elements.forEach(el => observer.observe(el));
+    elements.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.95 && rect.bottom > 0) {
+        el.classList.add('revealed');
+      } else {
+        observer.observe(el);
+      }
+    });
   } else {
     elements.forEach(el => el.classList.add('revealed'));
   }
