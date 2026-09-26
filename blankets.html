@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Пледы & текстиль для малышей — LILLE ATELIER</title>
+  <meta name="description" content="Фактурные вязаные пледы из 100% шерсти мериноса и шелка. Дышащие, гипоаллергенные, в кроватку и коляску 0+.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Announcement Bar -->
+  <aside class="announcement-bar" id="announcementBar" aria-label="Специальное предложение">
+    <span>Бесплатная бережная доставка при заказе от 5 000 ₽ <span class="accent">•</span> 100% шерсть мериноса экстрафайн</span>
+    <button class="announcement-close" id="closeAnnouncement" aria-label="Закрыть уведомление">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </aside>
+
+  <!-- Site Header -->
+  <header class="site-header" id="mainHeader">
+    <div class="container header-inner">
+      <div class="header-left">
+        <button class="action-btn mobile-menu-toggle" id="mobileMenuToggle" aria-label="Открыть мобильное меню" title="Меню">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <nav class="nav-desktop" aria-label="Главная навигация">
+          <ul class="nav-links">
+            <li><a href="index.html#categories" class="nav-link">Категории</a></li>
+            <li><a href="catalog.html" class="nav-link">Весь каталог</a></li>
+            <li><a href="index.html#philosophy" class="nav-link">О бренде</a></li>
+            <li><a href="index.html#care" class="nav-link">Уход</a></li>
+            <li><a href="index.html#lookbook" class="nav-link">Лукбук</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="brand-logo">
+        <a href="index.html" aria-label="Lille Atelier - на главную">
+          <span class="logo-title">Lille Atelier</span>
+          <span class="logo-subtitle">Knitwear & Petit • Est. 2024</span>
+        </a>
+      </div>
+
+      <div class="header-right">
+        <div class="header-actions">
+          <div class="header-search-desktop">
+            <input type="search" class="catalog-search-input" id="catalogSearch" placeholder="Поиск изделий..." aria-label="Поиск по каталогу">
+            <svg class="search-icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+            </svg>
+          </div>
+
+          <button class="action-btn mobile-search-toggle" id="mobileSearchToggle" aria-label="Поиск" title="Поиск" onclick="toggleMobileSearch()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+            </svg>
+          </button>
+
+          <button class="action-btn" onclick="goToCatalogWishlist()" aria-label="Избранное" title="Избранное">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+            </svg>
+            <span class="badge-count wishlist-count-badge" style="display: none;">0</span>
+          </button>
+
+          <button class="action-btn" id="openCartBtn" onclick="openCart()" aria-label="Корзина" title="Корзина">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            <span class="badge-count cart-count-badge" style="display: none;">0</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Search Bar -->
+    <div class="mobile-search-bar" id="mobileSearchBar">
+      <div class="container mobile-search-inner">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mobile-search-icon">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+        </svg>
+        <input type="search" id="mobileSearchInput" placeholder="Поиск по каталогу (кардиган, плед...)" aria-label="Поиск товаров на mobile">
+        <button class="mobile-search-close" onclick="toggleMobileSearch(false)" aria-label="Закрыть поиск">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="catalog-section reveal-on-scroll" id="catalog" aria-label="Пледы & текстиль">
+      <div class="container">
+        
+        <div class="catalog-breadcrumbs" id="catalogBreadcrumbs">
+          <nav class="breadcrumbs-trail" aria-label="Хлебные крошки">
+            <a href="index.html">Главная</a>
+            <span class="separator">/</span>
+            <a href="index.html#categories">Категории</a>
+            <span class="separator">/</span>
+            <span class="active">Пледы & текстиль</span>
+          </nav>
+          <a href="index.html#categories" class="back-to-categories-btn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 18-6-6 6-6"/></svg>
+            Ко всем категориям
+          </a>
+        </div>
+
+        <div class="catalog-view-header">
+          <div class="catalog-view-title-row">
+            <h1 class="catalog-view-title">Пледы & текстиль</h1>
+            <span class="catalog-view-count-badge" id="catalogViewCount">2 модели</span>
+          </div>
+          <p class="catalog-view-desc">
+            Объемные и ажурные пледы из 100% шерсти мериноса. Идеальны для выписки, кроватки, прогулочной коляски и памятных фотосессий
+          </p>
+        </div>
+
+        <div class="catalog-category-pills" id="catalogCategoryPills"></div>
+
+        <div class="catalog-toolbar">
+          <div class="size-filter-wrapper">
+            <span class="size-filter-label">Размер:</span>
+            <div class="size-filter-chips" id="sizeFilterChips"></div>
+          </div>
+
+          <div class="catalog-sorting">
+            <label for="sortSelect">Сортировка:</label>
+            <select id="sortSelect" class="sort-select" onchange="onSortChange(this.value)">
+              <option value="featured">По умолчанию</option>
+              <option value="price-low">Сначала доступные</option>
+              <option value="price-high">Сначала премиальные</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="product-grid" id="productGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand-logo">
+            <span class="logo-title">Lille Atelier</span>
+            <span class="logo-subtitle">Knitwear & Petit</span>
+          </div>
+          <p class="footer-desc">
+            Премиальная вязаная детская одежда из натурального мериноса и органического хлопка. Сделано с любовью к деталям и уважением к природе.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Каталог</h4>
+          <ul class="footer-links">
+            <li><a href="outerwear.html">Верхняя одежда</a></li>
+            <li><a href="sweaters.html">Свитеры & кардиганы</a></li>
+            <li><a href="rompers.html">Брюки & ромперы</a></li>
+            <li><a href="blankets.html" style="color: #FFFFFF; font-weight: 600;">Пледы & текстиль</a></li>
+            <li><a href="shoes.html">Обувь & пинетки</a></li>
+            <li><a href="sets.html">Комплекты на выписку</a></li>
+            <li><a href="accessories.html">Шапочки & аксессуары</a></li>
+            <li><a href="catalog.html" style="font-weight: 600; color: #FFFFFF; margin-top: 4px; display: inline-block;">Весь каталог (16 изделий) →</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Покупателям</h4>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)" onclick="openSizeGuide()">Таблица размеров</a></li>
+            <li><a href="index.html#care">Инструкция по уходу</a></li>
+            <li><a href="javascript:void(0)">Доставка и оплата</a></li>
+            <li><a href="javascript:void(0)">Возврат и обмен</a></li>
+            <li><a href="javascript:void(0)">Сертификаты качества</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Связь с нами</h4>
+          <ul class="footer-links">
+            <li>hello@lille-atelier.com</li>
+            <li>+7 (999) 000-12-34</li>
+            <li>Ежедневно с 10:00 до 21:00</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2026 Lille Atelier. Все права защищены. Безопасные платежи МИР, Visa, Mastercard.</div>
+        <div style="display: flex; gap: 20px;">
+          <a href="#">Политика конфиденциальности</a>
+          <a href="#">Публичная оферта</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Slide-Over Drawer Cart -->
+  <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeCart()"></div>
+  <aside class="drawer-cart" id="drawerCart" aria-label="Корзина покупок">
+    <div class="drawer-header">
+      <h3 class="drawer-title">Корзина</h3>
+      <button class="drawer-close" onclick="closeCart()" aria-label="Закрыть корзину">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="shipping-progress-box">
+      <div id="shippingProgressText">До бесплатной доставки осталось 5 000 ₽</div>
+      <div class="progress-track"><div class="progress-fill" id="shippingProgressBar"></div></div>
+    </div>
+    <div class="drawer-body" id="drawerCartBody"></div>
+    <div class="drawer-footer" id="drawerCartFooter">
+      <div class="cart-summary-row"><span>Промежуточный итог:</span><span id="cartSubtotal">0 ₽</span></div>
+      <div class="cart-summary-row"><span>Доставка:</span><span style="color: var(--color-success);">Рассчитывается при оформлении</span></div>
+      <div class="cart-total-row"><span>Итого к оплате:</span><span id="cartTotal">0 ₽</span></div>
+      <button class="btn btn-primary" style="width: 100%; padding: 14px;" onclick="openCheckout()">Оформить заказ</button>
+    </div>
+  </aside>
+
+  <!-- Quick View Modal (Floating down) -->
+  <div class="modal-backdrop" id="quickViewModal" onclick="if(event.target === this) closeQuickView()">
+    <div class="modal-dialog">
+      <button class="modal-close" onclick="closeQuickView()" aria-label="Закрыть окно">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <div id="quickViewContent"></div>
+    </div>
+  </div>
+
+  <!-- Size Guide Modal -->
+  <div class="modal-backdrop" id="sizeGuideModal" onclick="if(event.target === this) closeSizeGuide()">
+    <div class="modal-dialog size-guide-dialog">
+      <button class="modal-close" onclick="closeSizeGuide()" aria-label="Закрыть окно">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <span class="section-label">Размерная сетка LILLE</span>
+      <h3 style="font-family: var(--font-serif); font-size: 1.75rem; margin-bottom: 8px;">Гид по размерам малышей</h3>
+      <table class="size-table">
+        <thead><tr><th>Размер</th><th>Возраст</th><th>Рост (см)</th><th>Вес (кг)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>56 / 62</strong></td><td>0–3 месяца</td><td>50–62 см</td><td>3.0–5.5 кг</td></tr>
+          <tr><td><strong>68</strong></td><td>3–6 месяцев</td><td>63–68 см</td><td>5.5–7.5 кг</td></tr>
+          <tr><td><strong>74 / 80</strong></td><td>6–12 месяцев</td><td>69–80 см</td><td>7.5–10.0 кг</td></tr>
+          <tr><td><strong>86 / 92</strong></td><td>1–2 года</td><td>81–92 см</td><td>10.0–13.0 кг</td></tr>
+          <tr><td><strong>98 / 104</strong></td><td>2–4 года</td><td>93–104 см</td><td>13.0–16.5 кг</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Quick Checkout Modal -->
+  <div class="modal-backdrop" id="checkoutModal" onclick="if(event.target === this) closeCheckout()">
+    <div class="modal-dialog checkout-dialog">
+      <button class="modal-close" onclick="closeCheckout()" aria-label="Закрыть окно">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <span class="section-label">Быстрое оформление</span>
+      <h3 style="font-family: var(--font-serif); font-size: 1.75rem;">Оформление заказа</h3>
+      <p style="font-size: 0.8125rem; color: var(--color-muted); margin-top: 4px;">Сумма заказа: <strong id="checkoutOrderTotal" style="color: var(--color-primary); font-size: 1rem;">0 ₽</strong></p>
+      <form class="checkout-form" id="checkoutForm" onsubmit="submitCheckout(event)">
+        <div class="form-group"><label class="form-label" for="orderName">Ваше имя *</label><input type="text" id="orderName" class="form-input" placeholder="Елена" required></div>
+        <div class="form-group"><label class="form-label" for="orderPhone">Телефон для подтверждения *</label><input type="tel" id="orderPhone" class="form-input" placeholder="+7 (999) 000-00-00" required></div>
+        <div class="form-group"><label class="form-label" for="orderAddress">Город и адрес доставки *</label><input type="text" id="orderAddress" class="form-input" placeholder="г. Москва, ул. Ленина, д. 10, кв. 5" required></div>
+        <button type="submit" class="btn btn-primary" style="margin-top: 12px; width: 100%; padding: 14px;">Подтвердить заказ</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation Drawer -->
+  <div class="mobile-nav-backdrop" id="mobileNavBackdrop" onclick="closeMobileMenu()"></div>
+  <aside class="mobile-nav-drawer" id="mobileNav" aria-label="Мобильное меню" aria-hidden="true">
+    <div class="mobile-nav-header">
+      <div class="brand-logo">
+        <span class="logo-title">Lille Atelier</span>
+        <span class="logo-subtitle">Knitwear & Petit</span>
+      </div>
+      <button class="mobile-nav-close" id="closeMobileNav" onclick="closeMobileMenu()" aria-label="Закрыть меню">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="mobile-nav-body">
+      <div class="mobile-nav-section-title">Каталог товаров</div>
+      <ul class="mobile-nav-list">
+        <li><a href="catalog.html" class="mobile-nav-item">✨ Все изделия каталога</a></li>
+        <li><a href="outerwear.html" class="mobile-nav-item">🧥 Верхняя одежда</a></li>
+        <li><a href="sweaters.html" class="mobile-nav-item">🧶 Свитеры & кардиганы</a></li>
+        <li><a href="rompers.html" class="mobile-nav-item">🧸 Брюки & ромперы</a></li>
+        <li><a href="blankets.html" class="mobile-nav-item active">🌾 Пледы & текстиль</a></li>
+        <li><a href="shoes.html" class="mobile-nav-item">🧦 Обувь & пинетки</a></li>
+        <li><a href="sets.html" class="mobile-nav-item">🎁 Комплекты на выписку</a></li>
+        <li><a href="accessories.html" class="mobile-nav-item">🧣 Шапочки & аксессуары</a></li>
+      </ul>
+
+      <div class="mobile-nav-divider"></div>
+
+      <div class="mobile-nav-section-title">О бренде & Сервис</div>
+      <ul class="mobile-nav-list secondary">
+        <li><a href="index.html#philosophy" class="mobile-nav-item" onclick="closeMobileMenu()">🌿 Философия и материалы</a></li>
+        <li><a href="index.html#care" class="mobile-nav-item" onclick="closeMobileMenu()">🧼 Руководство по уходу</a></li>
+        <li><a href="index.html#lookbook" class="mobile-nav-item" onclick="closeMobileMenu()">📷 Фотоистории / Лукбук</a></li>
+        <li><button class="mobile-nav-item" onclick="closeMobileMenu(); openSizeGuide();">📏 Таблица размеров</button></li>
+      </ul>
+
+      <div class="mobile-nav-divider"></div>
+
+      <div class="mobile-nav-contacts">
+        <div class="mobile-nav-contact-title">Служба заботы</div>
+        <p class="mobile-nav-contact-text">Поможем подобрать размер и собрать подарочный комплект:</p>
+        <div class="mobile-nav-socials">
+          <a href="https://wa.me/" target="_blank" rel="noopener" class="mobile-social-pill">WhatsApp</a>
+          <a href="https://t.me/" target="_blank" rel="noopener" class="mobile-social-pill">Telegram</a>
+        </div>
+        <div class="mobile-nav-badge">
+          🚚 Бесплатная доставка от 5 000 ₽
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Page Category Context -->
+  <script>
+    window.PAGE_CATEGORY = 'blankets';
+  </script>
+  <script src="js/app.js"></script>
+</body>
+</html>
