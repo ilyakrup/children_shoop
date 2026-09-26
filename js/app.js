@@ -638,10 +638,11 @@ function initCatalog(shouldCascade = true) {
           </div>
 
           <button class="card-action-btn" onclick="addToCart('${product.id}')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
             </svg>
-            Добавить в корзину
+            <span class="btn-text-full">Добавить в корзину</span>
+            <span class="btn-text-short">В корзину</span>
           </button>
         </div>
       </article>
@@ -864,30 +865,31 @@ window.openQuickView = function(productId) {
         <img src="${product.image}" alt="${product.name}">
       </div>
       <div class="quickview-details">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <div class="quickview-badge-row">
           <span class="product-composition">${product.composition}</span>
           ${product.badge ? `<span class="badge ${product.badgeType}">${product.badge}</span>` : ''}
         </div>
-        <h2 style="font-family: var(--font-serif); font-size: 2.125rem; line-height: 1.15; margin-bottom: 8px;">${product.name}</h2>
+        <h2 class="quickview-title">${product.name}</h2>
         
-        <div class="product-price-row" style="margin-bottom: 16px;">
-          <span class="product-price" style="font-size: 1.5rem;">${formatPrice(product.price)}</span>
-          ${product.oldPrice ? `<span class="product-old-price" style="font-size: 1.125rem;">${formatPrice(product.oldPrice)}</span>` : ''}
+        <div class="product-price-row quickview-price-row">
+          <span class="product-price">${formatPrice(product.price)}</span>
+          ${product.oldPrice ? `<span class="product-old-price">${formatPrice(product.oldPrice)}</span>` : ''}
         </div>
 
-        <p style="font-size: 0.875rem; color: var(--color-secondary); line-height: 1.65; margin-bottom: 20px;">
+        <p class="quickview-desc">
           ${product.description}
         </p>
 
         <!-- Color Selector -->
-        <div style="margin-bottom: 16px;">
-          <label style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; display: block; margin-bottom: 8px;">
-            Цвет: <span id="qvSelectedColorName" style="color: var(--color-primary); font-weight: 500;">${product.colors[0].name}</span>
+        <div class="quickview-option-block">
+          <label class="quickview-option-label">
+            Цвет: <span id="qvSelectedColorName" class="quickview-color-val">${product.colors[0].name}</span>
           </label>
           <div class="swatch-group">
             ${product.colors.map((c, i) => `
               <div class="swatch-circle ${i === 0 ? 'active' : ''}" 
-                   style="background-color: ${c.hex}; width: 24px; height: 24px;"
+                   style="background-color: ${c.hex};" 
+                   title="${c.name}"
                    onclick="selectQvColor(this, '${c.name}')">
               </div>
             `).join('')}
@@ -895,19 +897,14 @@ window.openQuickView = function(productId) {
         </div>
 
         <!-- Size Selector -->
-        <div style="margin-bottom: 22px;">
-          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
-            <label style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;">
-              Размер
-            </label>
-            <button onclick="openSizeGuide()" style="font-size: 0.75rem; color: var(--color-muted); text-decoration: underline; background: none; border: none; cursor: pointer;">
-              Таблица размеров
-            </button>
+        <div class="quickview-option-block">
+          <div class="quickview-size-header">
+            <label class="quickview-option-label">Размер</label>
+            <button class="quickview-sizeguide-link" onclick="openSizeGuide()">Таблица размеров</button>
           </div>
           <div class="size-chips">
             ${product.sizes.map((s, i) => `
               <button class="size-chip ${i === 0 ? 'active' : ''}" 
-                      style="padding: 7px 14px; font-size: 0.75rem;"
                       onclick="selectQvSize(this, '${s}')">
                 ${s}
               </button>
@@ -915,30 +912,32 @@ window.openQuickView = function(productId) {
           </div>
         </div>
 
-        <!-- Action Row: Quantity + Add To Cart + Wishlist -->
-        <div style="display: flex; gap: 12px; margin-top: auto; align-items: center;">
-          <div class="cart-qty-ctrl" style="height: 48px; border-radius: var(--radius-xs); padding: 0 4px;">
-            <button class="qty-btn" onclick="stepQvQty(-1)" style="width: 32px; height: 32px;">-</button>
-            <span class="qty-val" id="qvQtyDisplay" style="min-width: 28px; font-size: 0.9375rem; font-weight: 600;">1</span>
-            <button class="qty-btn" onclick="stepQvQty(1)" style="width: 32px; height: 32px;">+</button>
+        <!-- Action Row: Quantity + Wishlist + Add To Cart -->
+        <div class="quickview-action-container">
+          <div class="quickview-qty-row">
+            <div class="cart-qty-ctrl">
+              <button class="qty-btn" onclick="stepQvQty(-1)">-</button>
+              <span class="qty-val" id="qvQtyDisplay">1</span>
+              <button class="qty-btn" onclick="stepQvQty(1)">+</button>
+            </div>
+            <button class="qv-wishlist-btn ${state.wishlist.includes(product.id) ? 'active' : ''}" onclick="toggleWishlist('${product.id}')" aria-label="В избранное" title="В избранное">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="${state.wishlist.includes(product.id) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="1.8">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+              </svg>
+              <span>В избранное</span>
+            </button>
           </div>
 
-          <button class="btn btn-primary" style="flex: 1; height: 48px;" onclick="addQuickViewToCart('${product.id}')">
+          <button class="btn btn-primary qv-add-btn" onclick="addQuickViewToCart('${product.id}')">
             Добавить в корзину
-          </button>
-
-          <button class="wishlist-btn" style="position: static; width: 48px; height: 48px; border-radius: var(--radius-xs);" onclick="toggleWishlist('${product.id}')">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="${state.wishlist.includes(product.id) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
-              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
-            </svg>
           </button>
         </div>
 
-        <div style="margin-top: 14px; display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--color-muted);">
+        <div class="quickview-features">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           </svg>
-          <span>100% органический состав • Гипоаллергенно 0+ • Доставка с примеркой</span>
+          <span>100% органический меринос • 0+ • Доставка с примеркой</span>
         </div>
 
       </div>
