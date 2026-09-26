@@ -11,7 +11,7 @@ const CATEGORIES_DATA = [
     desc: 'Комбинезоны-трансформеры и теплые вязаные пальто для прохладных прогулок',
     count: '2 модели',
     url: 'outerwear.html',
-    image: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1617331140180-e8262094733a?auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 'sweaters',
@@ -35,7 +35,7 @@ const CATEGORIES_DATA = [
     desc: 'Воздушные фактурные пледы из 100% шерсти мериноса для коляски и кроватки',
     count: '2 модели',
     url: 'blankets.html',
-    image: 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1543334270-24bb46642afe?auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 'shoes',
@@ -43,7 +43,7 @@ const CATEGORIES_DATA = [
     desc: 'Мягкие пинетки из мериноса на завязках и первые шерстяные мокасины',
     count: '2 модели',
     url: 'shoes.html',
-    image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1761439099134-e64b1e803135?auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 'sets',
@@ -51,7 +51,7 @@ const CATEGORIES_DATA = [
     desc: 'Готовые подарочные боксы и наборы первой одежды в крафтовой упаковке',
     count: '2 набора',
     url: 'sets.html',
-    image: 'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?auto=format&fit=crop&w=800&q=80'
+    image: 'https://plus.unsplash.com/premium_photo-1661430931607-70b2e194f741?auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 'accessories',
@@ -59,7 +59,7 @@ const CATEGORIES_DATA = [
     desc: 'Анатомические чепчики с мягкими ушками, варежки-царапки и снуды',
     count: '2 модели',
     url: 'accessories.html',
-    image: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1602685365252-c13f549f1f5f?auto=format&fit=crop&w=800&q=80'
   }
 ];
 
@@ -114,7 +114,7 @@ const PRODUCTS_DATA = [
     oldPrice: 7900,
     badge: 'Теплый слой 0+',
     badgeType: 'badge-warm',
-    image: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1617331140180-e8262094733a?auto=format&fit=crop&w=800&q=80',
     composition: '100% шерсть мериноса двойной плотности',
     care: 'Деликатная стирка для шерсти, горизонтальная сушка',
     description: 'Вязаный уличный комбинезон с глубоким капюшоном и закрывающимися манжетами-рукавичками. Надежно защищает от ветра во время прогулок в коляске.',
@@ -134,7 +134,7 @@ const PRODUCTS_DATA = [
     oldPrice: null,
     badge: 'Премиум',
     badgeType: 'badge-dark',
-    image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1647650096640-c5c608e1d259?auto=format&fit=crop&w=800&q=80',
     composition: '85% меринос экстрафайн, 15% органический хлопок',
     care: 'Сухая чистка или бережная ручная стирка при 30°C',
     description: 'Удлиненное вязаное пальто фактурной платочной вязки с объемным уютным капюшоном и большими пуговицами из светлого ясеня.',
@@ -153,7 +153,7 @@ const PRODUCTS_DATA = [
     oldPrice: 4900,
     badge: 'Хит',
     badgeType: 'badge-dark',
-    image: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1633007400830-61a6f6fcbc40?auto=format&fit=crop&w=800&q=80',
     composition: '90% меринос, 10% кашемир',
     care: 'Деликатная ручная стирка, сушить в расправленном виде',
     description: 'Стильный скандинавский джемпер свободного кроя. Эластичный мягкий воротник легко проходит через голову малыша без слез и дискомфорта.',
@@ -173,7 +173,7 @@ const PRODUCTS_DATA = [
     oldPrice: null,
     badge: 'Новинка',
     badgeType: 'badge-outline',
-    image: 'https://images.unsplash.com/photo-1576426863848-c21f53c60b19?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1543334270-24bb46642afe?auto=format&fit=crop&w=800&q=80',
     composition: '100% экстрафайн меринос 19.5 микрон',
     care: 'Ручная стирка, мягкий отжим в полотенце',
     description: 'Классический фактурный джемпер с узором косички по переду. Безупречно сочетается с нашими вязаными штанишками.',
@@ -192,7 +192,7 @@ const PRODUCTS_DATA = [
     oldPrice: 3400,
     badge: 'База',
     badgeType: 'badge-dark',
-    image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1773243086631-962baefccd8a?auto=format&fit=crop&w=800&q=80',
     composition: '100% чистый меринос',
     care: 'Бережная машинная стирка «Шерсть» до 30°C',
     description: 'Эластичные штанишки в мелкий рубчик с широкой мягкой резинкой на животике, которая не давит даже после кормления малыша.',
@@ -212,7 +212,7 @@ const PRODUCTS_DATA = [
     oldPrice: null,
     badge: 'Выбор мам',
     badgeType: 'badge-warm',
-    image: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1765784452603-ea143b03b6b3?auto=format&fit=crop&w=800&q=80',
     composition: '100% тонкорунный меринос',
     care: 'Ручная стирка, жидкое экологичное средство',
     description: 'Очаровательный полукомбинезон с регулируемыми перекрестными лямками на спинке, который «растет» вместе с малышом.',
@@ -231,7 +231,7 @@ const PRODUCTS_DATA = [
     oldPrice: null,
     badge: '100% Меринос',
     badgeType: 'badge-outline',
-    image: 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1543334270-24bb46642afe?auto=format&fit=crop&w=800&q=80',
     composition: '100% шерсть мериноса высшей категории',
     care: 'Стирка при 30°C без отжима, сушить горизонтально',
     description: 'Воздушный и дышащий плед размером 90×100 см. Идеален для коляски, детской кроватки или уютных семейных фотосессий. Согревает в прохладу и не дает перегреваться.',
@@ -251,7 +251,7 @@ const PRODUCTS_DATA = [
     oldPrice: 6200,
     badge: 'На выписку',
     badgeType: 'badge-warm',
-    image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1779489652911-11192c2c8b63?auto=format&fit=crop&w=800&q=80',
     composition: '80% меринос, 20% шелк',
     care: 'Бережная сухая чистка или ручная стирка',
     description: 'Шелковистый на ощупь ажурный плед с фестончатым краем. Станет семейной реликвией и украшением первых памятных фотографий.',
@@ -270,7 +270,7 @@ const PRODUCTS_DATA = [
     oldPrice: null,
     badge: 'Анатомический крой',
     badgeType: 'badge-dark',
-    image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1761439099134-e64b1e803135?auto=format&fit=crop&w=800&q=80',
     composition: '100% шерсть мериноса экстрафайн',
     care: 'Ручная бережная стирка',
     description: 'Мягкие вязаные пинетки с эластичными шнурочками, которые надежно фиксируют изделие на ножке и не соскальзывают во время сна и бодрствования.',
@@ -290,7 +290,7 @@ const PRODUCTS_DATA = [
     oldPrice: 2800,
     badge: 'Новинка',
     badgeType: 'badge-outline',
-    image: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1687511902042-ba13b49eb7a5?auto=format&fit=crop&w=800&q=80',
     composition: '100% меринос + замшевые нескользящие вставки',
     care: 'Сухая чистка щеткой для шерсти',
     description: 'Уютные мягкие сапожки для малышей, которые уже пробуют делать первые шаги. Натуральная замшевая подошва предотвращает скольжение на полу.',
@@ -309,7 +309,7 @@ const PRODUCTS_DATA = [
     oldPrice: 10500,
     badge: 'Premium Box',
     badgeType: 'badge-warm',
-    image: 'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?auto=format&fit=crop&w=800&q=80',
+    image: 'https://plus.unsplash.com/premium_photo-1661430931607-70b2e194f741?auto=format&fit=crop&w=800&q=80',
     composition: '100% меринос экстрафайн + массив бука',
     care: 'Включает памятку по уходу и фирменный лавандовый саше',
     description: 'Эксклюзивный подарочный набор в крафтовом дизайнерском боксе: ромпер, кардиган, чепчик, пинетки и деревянный тактильный грызунок ручной работы.',
@@ -328,7 +328,7 @@ const PRODUCTS_DATA = [
     oldPrice: null,
     badge: 'Капсула 0+',
     badgeType: 'badge-dark',
-    image: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=800&q=80',
+    image: 'https://plus.unsplash.com/premium_photo-1675183689638-a68fe7048da9?auto=format&fit=crop&w=800&q=80',
     composition: '100% органический меринос',
     care: 'Бережная ручная стирка',
     description: 'Гармоничный комплект из мягкого комбинезона на пуговицах, шапочки и пинеток. Полностью закрывает потребности гардероба на первый месяц жизни.',
@@ -347,7 +347,7 @@ const PRODUCTS_DATA = [
     oldPrice: null,
     badge: 'Хит',
     badgeType: 'badge-outline',
-    image: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1602685365252-c13f549f1f5f?auto=format&fit=crop&w=800&q=80',
     composition: '100% ультратонкий меринос',
     care: 'Ручная стирка, горизонтальная сушка',
     description: 'Идеально облегает голову новорожденного, прикрывая ушки от сквозняков. Мягкие плоские завязочки не натирают нежный подбородок.',
@@ -367,7 +367,7 @@ const PRODUCTS_DATA = [
     oldPrice: 3100,
     badge: 'На выписку',
     badgeType: 'badge-warm',
-    image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1611883917553-7b6e4e6b8896?auto=format&fit=crop&w=800&q=80',
     composition: '90% меринос, 10% кашемир',
     care: 'Ручная стирка в прохладной воде',
     description: 'Заботливый комплект для первых прогулок. Бесшовные варежки берегут нежные пальчики от холода и случайных царапин.',
