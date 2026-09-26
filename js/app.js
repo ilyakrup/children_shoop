@@ -457,13 +457,13 @@ function initScrollReveal() {
         }
       });
     }, {
-      threshold: 0.02,
-      rootMargin: '0px 0px -10px 0px'
+      threshold: 0.01,
+      rootMargin: '0px 0px 140px 0px'
     });
 
     elements.forEach(el => {
       const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight * 0.95 && rect.bottom > 0) {
+      if (rect.top < window.innerHeight) {
         el.classList.add('revealed');
       } else {
         observer.observe(el);
