@@ -409,6 +409,28 @@ document.addEventListener('DOMContentLoaded', () => {
     state.currentCategory = window.PAGE_CATEGORY;
   }
 
+  // Parse URL Search Query Parameter (?search=... or ?q=...)
+  const urlParams = new URLSearchParams(window.location.search);
+  const searchParam = urlParams.get('search') || urlParams.get('q');
+  if (searchParam) {
+    state.searchQuery = searchParam.trim();
+    state.currentCategory = 'all';
+
+    const searchInput = document.getElementById('catalogSearch');
+    const mobileSearchInput = document.getElementById('mobileSearchInput');
+    if (searchInput) searchInput.value = state.searchQuery;
+    if (mobileSearchInput) mobileSearchInput.value = state.searchQuery;
+
+    const titleEl = document.getElementById('catalogViewTitle');
+    const descEl = document.getElementById('catalogViewDesc');
+    if (titleEl) {
+      titleEl.innerHTML = `Результаты поиска: «${escapeHtml(state.searchQuery)}» <button class="btn-clear-search" onclick="clearCatalogSearch()">Сбросить ✕</button>`;
+    }
+    if (descEl) {
+      descEl.textContent = `Показаны модели из коллекции по вашему запросу. Нажмите «Сбросить», чтобы увидеть весь каталог.`;
+    }
+  }
+
   renderCategoryGrid();
   renderCategoryPills();
   renderSizeFilterChips();
@@ -416,6 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCart();
   initWishlist();
   initEventListeners();
+  initSmartSearch();
   initAccordions();
   initScrollReveal();
 });
@@ -1070,7 +1093,10 @@ window.toggleMobileSearch = function(force) {
   if (isOpen) {
     bar.classList.add('open');
     if (input) {
-      setTimeout(() => input.focus(), 120);
+      setTimeout(() => {
+        input.focus();
+        renderSmartSearchResults(input.value.trim(), 'mobile');
+      }, 100);
     }
   } else {
     bar.classList.remove('open');
@@ -1086,32 +1112,276 @@ window.goToCatalogWishlist = function() {
   }
 };
 
-// Event Listeners for Filters, Search & Navigation
-function initEventListeners() {
-  // Live Desktop Search
+// ==========================================================================
+// SMART SEARCH ENGINE (Live suggestions, highlighting, catalog sync)
+// ==========================================================================
+const POPULAR_SEARCH_TAGS = ['Меринос', 'Комбинезон', 'Кардиган', 'Плед', 'Штанишки', 'Пинетки', 'Экрю', '100% шерсть'];
+
+function initSmartSearch() {
+  const desktopSearchWrap = document.querySelector('.header-search-desktop');
   const searchInput = document.getElementById('catalogSearch');
+  const mobileSearchBar = document.getElementById('mobileSearchBar');
   const mobileSearchInput = document.getElementById('mobileSearchInput');
 
-  if (searchInput) {
+  // Ensure Desktop Dropdown Exists
+  let desktopDropdown = document.getElementById('desktopSearchResults');
+  if (desktopSearchWrap && !desktopDropdown) {
+    desktopDropdown = document.createElement('div');
+    desktopDropdown.id = 'desktopSearchResults';
+    desktopDropdown.className = 'smart-search-dropdown';
+    desktopSearchWrap.appendChild(desktopDropdown);
+  }
+
+  // Ensure Mobile Results Container Exists
+  let mobileResults = document.getElementById('mobileSearchResults');
+  if (mobileSearchBar && !mobileResults) {
+    mobileResults = document.createElement('div');
+    mobileResults.id = 'mobileSearchResults';
+    mobileResults.className = 'mobile-search-results';
+    mobileSearchBar.appendChild(mobileResults);
+  }
+
+  // Desktop search events
+  if (searchInput && desktopDropdown) {
+    searchInput.addEventListener('focus', () => {
+      renderSmartSearchResults(searchInput.value.trim(), 'desktop');
+      desktopDropdown.classList.add('open');
+    });
+
     searchInput.addEventListener('input', (e) => {
-      state.searchQuery = e.target.value.trim();
+      const q = e.target.value.trim();
+      state.searchQuery = q;
       if (mobileSearchInput && mobileSearchInput.value !== e.target.value) {
         mobileSearchInput.value = e.target.value;
       }
-      initCatalog(true);
+      renderSmartSearchResults(q, 'desktop');
+      desktopDropdown.classList.add('open');
+      
+      if (document.getElementById('productGrid')) {
+        initCatalog(true);
+      }
+    });
+
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const q = searchInput.value.trim();
+        desktopDropdown.classList.remove('open');
+        window.location.href = 'catalog.html?search=' + encodeURIComponent(q);
+      } else if (e.key === 'Escape') {
+        desktopDropdown.classList.remove('open');
+        searchInput.blur();
+      }
     });
   }
 
-  // Live Mobile Search
-  if (mobileSearchInput) {
+  // Mobile search events
+  if (mobileSearchInput && mobileResults) {
+    mobileSearchInput.addEventListener('focus', () => {
+      renderSmartSearchResults(mobileSearchInput.value.trim(), 'mobile');
+    });
+
     mobileSearchInput.addEventListener('input', (e) => {
-      state.searchQuery = e.target.value.trim();
+      const q = e.target.value.trim();
+      state.searchQuery = q;
       if (searchInput && searchInput.value !== e.target.value) {
         searchInput.value = e.target.value;
       }
-      initCatalog(true);
+      renderSmartSearchResults(q, 'mobile');
+
+      if (document.getElementById('productGrid')) {
+        initCatalog(true);
+      }
+    });
+
+    mobileSearchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const q = mobileSearchInput.value.trim();
+        toggleMobileSearch(false);
+        window.location.href = 'catalog.html?search=' + encodeURIComponent(q);
+      }
     });
   }
+
+  // Close desktop search dropdown on click outside
+  document.addEventListener('click', (e) => {
+    if (desktopDropdown && !desktopDropdown.contains(e.target) && !desktopSearchWrap.contains(e.target)) {
+      desktopDropdown.classList.remove('open');
+    }
+  });
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/[&<>"']/g, (m) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[m]));
+}
+
+function highlightMatch(text, query) {
+  if (!query) return escapeHtml(text);
+  const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+  return escapeHtml(text).replace(regex, '<mark>$1</mark>');
+}
+
+function renderSmartSearchResults(query, mode = 'desktop') {
+  const container = mode === 'desktop' 
+    ? document.getElementById('desktopSearchResults') 
+    : document.getElementById('mobileSearchResults');
+  if (!container) return;
+
+  const cleanQuery = query.toLowerCase().trim();
+
+  // If query is empty, show Quick Search Tags & Featured Products
+  if (!cleanQuery) {
+    const featuredItems = PRODUCTS_DATA.slice(0, 3);
+    container.innerHTML = `
+      <div class="search-section-label">
+        <span>Популярные запросы</span>
+      </div>
+      <div class="search-quick-tags">
+        ${POPULAR_SEARCH_TAGS.map(tag => `
+          <button type="button" class="search-tag-chip" onclick="applySearchTag('${escapeHtml(tag)}', '${mode}')">${escapeHtml(tag)}</button>
+        `).join('')}
+      </div>
+
+      <div class="search-section-label" style="margin-top: 14px;">
+        <span>Хиты коллекции</span>
+      </div>
+      <div class="search-items-list">
+        ${featuredItems.map(p => `
+          <div class="search-item-card" onclick="openQuickView('${p.id}'); closeSmartSearch();">
+            <img src="${p.image}" alt="${p.name}" class="search-item-img" loading="lazy">
+            <div class="search-item-body">
+              <div class="search-item-meta">${p.categoryLabel} • ${p.composition}</div>
+              <div class="search-item-name">${p.name}</div>
+              <div class="search-item-price-row">
+                <span class="search-item-price">${formatPrice(p.price)}</span>
+                ${p.oldPrice ? `<span class="search-item-old-price">${formatPrice(p.oldPrice)}</span>` : ''}
+              </div>
+            </div>
+            <button type="button" class="search-item-qv-btn" onclick="event.stopPropagation(); openQuickView('${p.id}'); closeSmartSearch();">
+              Просмотр
+            </button>
+          </div>
+        `).join('')}
+      </div>
+      <a href="catalog.html" class="search-view-all-link">Смотреть весь каталог изделий (16) →</a>
+    `;
+    return;
+  }
+
+  // Multi-criteria smart search
+  const matches = PRODUCTS_DATA.filter(p => {
+    const inName = p.name.toLowerCase().includes(cleanQuery);
+    const inCat = p.categoryLabel.toLowerCase().includes(cleanQuery) || p.category.toLowerCase().includes(cleanQuery);
+    const inComp = p.composition.toLowerCase().includes(cleanQuery);
+    const inDesc = p.description.toLowerCase().includes(cleanQuery);
+    const inColor = p.colors.some(c => c.name.toLowerCase().includes(cleanQuery));
+    const inBadge = p.badge && p.badge.toLowerCase().includes(cleanQuery);
+    return inName || inCat || inComp || inDesc || inColor || inBadge;
+  });
+
+  // Relevance sorting: title match first
+  matches.sort((a, b) => {
+    const aName = a.name.toLowerCase().includes(cleanQuery);
+    const bName = b.name.toLowerCase().includes(cleanQuery);
+    if (aName && !bName) return -1;
+    if (!aName && bName) return 1;
+    return 0;
+  });
+
+  if (matches.length > 0) {
+    const displayedItems = matches.slice(0, 5);
+    const countWord = matches.length === 1 ? 'модель' : matches.length < 5 ? 'модели' : 'моделей';
+    container.innerHTML = `
+      <div class="search-section-label">
+        <span>Найдено: ${matches.length} ${countWord}</span>
+      </div>
+      <div class="search-items-list">
+        ${displayedItems.map(p => `
+          <div class="search-item-card" onclick="openQuickView('${p.id}'); closeSmartSearch();">
+            <img src="${p.image}" alt="${p.name}" class="search-item-img" loading="lazy">
+            <div class="search-item-body">
+              <div class="search-item-meta">${p.categoryLabel} • ${p.composition}</div>
+              <div class="search-item-name">${highlightMatch(p.name, query)}</div>
+              <div class="search-item-price-row">
+                <span class="search-item-price">${formatPrice(p.price)}</span>
+                ${p.oldPrice ? `<span class="search-item-old-price">${formatPrice(p.oldPrice)}</span>` : ''}
+              </div>
+            </div>
+            <button type="button" class="search-item-qv-btn" onclick="event.stopPropagation(); openQuickView('${p.id}'); closeSmartSearch();">
+              Просмотр
+            </button>
+          </div>
+        `).join('')}
+      </div>
+      <a href="catalog.html?search=${encodeURIComponent(query)}" class="search-view-all-link">
+        Показать все в каталоге (${matches.length}) →
+      </a>
+    `;
+  } else {
+    container.innerHTML = `
+      <div class="search-empty-state">
+        <div class="search-empty-title">По запросу «${escapeHtml(query)}» ничего не найдено</div>
+        <p class="search-empty-desc">Проверьте написание или выберите один из популярных разделов:</p>
+        <div class="search-quick-tags" style="justify-content: center;">
+          ${POPULAR_SEARCH_TAGS.map(tag => `
+            <button type="button" class="search-tag-chip" onclick="applySearchTag('${escapeHtml(tag)}', '${mode}')">${escapeHtml(tag)}</button>
+          `).join('')}
+        </div>
+        <a href="catalog.html" class="search-view-all-link" style="margin-top: 14px;">Перейти в каталог (все 16 моделей)</a>
+      </div>
+    `;
+  }
+}
+
+window.applySearchTag = function(tag, mode) {
+  const searchInput = document.getElementById('catalogSearch');
+  const mobileSearchInput = document.getElementById('mobileSearchInput');
+  if (searchInput) searchInput.value = tag;
+  if (mobileSearchInput) mobileSearchInput.value = tag;
+  state.searchQuery = tag;
+  renderSmartSearchResults(tag, mode);
+
+  if (document.getElementById('productGrid')) {
+    initCatalog(true);
+  }
+};
+
+window.closeSmartSearch = function() {
+  const desktopDropdown = document.getElementById('desktopSearchResults');
+  if (desktopDropdown) desktopDropdown.classList.remove('open');
+  toggleMobileSearch(false);
+};
+
+window.clearCatalogSearch = function() {
+  state.searchQuery = '';
+  const searchInput = document.getElementById('catalogSearch');
+  const mobileSearchInput = document.getElementById('mobileSearchInput');
+  if (searchInput) searchInput.value = '';
+  if (mobileSearchInput) mobileSearchInput.value = '';
+
+  const titleEl = document.getElementById('catalogViewTitle');
+  const descEl = document.getElementById('catalogViewDesc');
+  if (titleEl) titleEl.textContent = 'Все изделия коллекции';
+  if (descEl) descEl.textContent = 'Премиальные вязаные изделия из ультратонкой шерсти мериноса экстрафайн и монгольского кашемира';
+
+  // Remove search param from URL
+  if (window.history && window.history.replaceState) {
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+
+  initCatalog(true);
+};
+
+// Event Listeners for Filters, Search & Navigation
+function initEventListeners() {
 
   // Announcement Bar Close
   const annClose = document.getElementById('closeAnnouncement');
