@@ -393,12 +393,42 @@ const ALL_FILTER_SIZES = [
 // State Management
 let state = {
   cart: JSON.parse(localStorage.getItem('lille_cart') || '[]'),
+  promo: JSON.parse(localStorage.getItem('lille_promo') || 'null'),
   wishlist: JSON.parse(localStorage.getItem('lille_wishlist') || '[]'),
   currentCategory: window.PAGE_CATEGORY || 'all',
   selectedSize: 'all',
   currentSort: 'featured',
   searchQuery: ''
 };
+
+// Active Promo Codes Database
+const PROMO_CODES = {
+  'LILLE10': { type: 'percent', value: 10, label: 'Скидка 10% на первый заказ' },
+  'WELCOME': { type: 'percent', value: 10, label: 'Приветственная скидка 10%' },
+  'WELCOME10': { type: 'percent', value: 10, label: 'Приветственная скидка 10%' },
+  'START10': { type: 'percent', value: 10, label: 'Скидка 10% для новых гостей' },
+  'MERINO15': { type: 'percent', value: 15, label: 'Скидка 15% на меринос' },
+  'LILLE15': { type: 'percent', value: 15, label: 'Скидка 15% на коллекцию' },
+  'LILLEVIP': { type: 'percent', value: 20, label: 'VIP-скидка 20%' },
+  'FAMILY20': { type: 'percent', value: 20, label: 'Семейная скидка 20%' },
+  'BABY500': { type: 'fixed', value: 500, minTotal: 3000, label: 'Скидка 500 ₽ от 3 000 ₽' },
+  'MERINO500': { type: 'fixed', value: 500, minTotal: 3000, label: 'Скидка 500 ₽ от 3 000 ₽' }
+};
+
+function calculateDiscount(subtotal) {
+  if (!state.promo || subtotal <= 0) return 0;
+  const promo = state.promo;
+  if (promo.minTotal && subtotal < promo.minTotal) {
+    return 0;
+  }
+  if (promo.type === 'percent') {
+    return Math.round((subtotal * promo.value) / 100);
+  }
+  if (promo.type === 'fixed') {
+    return Math.min(subtotal, promo.value);
+  }
+  return 0;
+}
 
 // Free Shipping Threshold
 const FREE_SHIPPING_THRESHOLD = 5000;
@@ -770,6 +800,70 @@ function updateCartCounters() {
   });
 }
 
+// Promo Code Handler Functions
+window.applyPromoCode = function(event) {
+  if (event) event.preventDefault();
+  const input = document.getElementById('cartPromoInput');
+  const msgEl = document.getElementById('cartPromoMsg');
+  if (!input) return;
+
+  const rawCode = input.value.trim().toUpperCase().replace(/\s+/g, '');
+  if (!rawCode) {
+    if (msgEl) {
+      msgEl.textContent = 'Пожалуйста, введите промокод';
+      msgEl.className = 'cart-promo-msg error';
+      msgEl.style.display = 'block';
+    }
+    return;
+  }
+
+  const promo = PROMO_CODES[rawCode];
+  if (!promo) {
+    if (msgEl) {
+      msgEl.textContent = 'Промокод не найден или устарел';
+      msgEl.className = 'cart-promo-msg error';
+      msgEl.style.display = 'block';
+    }
+    showToast('Промокод не найден');
+    return;
+  }
+
+  const subtotal = state.cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  if (promo.minTotal && subtotal < promo.minTotal) {
+    if (msgEl) {
+      msgEl.textContent = `Промокод действует при заказе от ${formatPrice(promo.minTotal)}`;
+      msgEl.className = 'cart-promo-msg error';
+      msgEl.style.display = 'block';
+    }
+    showToast(`Минимальная сумма для промокода — ${formatPrice(promo.minTotal)}`);
+    return;
+  }
+
+  state.promo = {
+    code: rawCode,
+    type: promo.type,
+    value: promo.value,
+    label: promo.label,
+    minTotal: promo.minTotal || 0
+  };
+  localStorage.setItem('lille_promo', JSON.stringify(state.promo));
+  renderCartDrawer();
+  showToast(`Промокод ${rawCode} успешно применен!`);
+};
+
+window.quickApplyPromo = function(code) {
+  const input = document.getElementById('cartPromoInput');
+  if (input) input.value = code;
+  window.applyPromoCode();
+};
+
+window.removePromoCode = function() {
+  state.promo = null;
+  localStorage.removeItem('lille_promo');
+  renderCartDrawer();
+  showToast('Промокод отменен');
+};
+
 function renderCartDrawer() {
   const body = document.getElementById('drawerCartBody');
   const footer = document.getElementById('drawerCartFooter');
@@ -778,16 +872,18 @@ function renderCartDrawer() {
 
   if (!body) return;
 
-  const totalAmount = state.cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const subtotal = state.cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const discountAmount = calculateDiscount(subtotal);
+  const finalTotal = Math.max(0, subtotal - discountAmount);
 
   // Free shipping bar calculation
   if (shippingInfo && shippingBar) {
-    if (totalAmount >= FREE_SHIPPING_THRESHOLD) {
+    if (subtotal >= FREE_SHIPPING_THRESHOLD) {
       shippingInfo.innerHTML = `✨ <strong>Поздравляем!</strong> Доставка для вас бесплатна`;
       shippingBar.style.width = '100%';
     } else {
-      const remaining = FREE_SHIPPING_THRESHOLD - totalAmount;
-      const pct = Math.min(100, Math.round((totalAmount / FREE_SHIPPING_THRESHOLD) * 100));
+      const remaining = FREE_SHIPPING_THRESHOLD - subtotal;
+      const pct = Math.min(100, Math.round((subtotal / FREE_SHIPPING_THRESHOLD) * 100));
       shippingInfo.innerHTML = `До бесплатной доставки осталось <strong>${formatPrice(remaining)}</strong>`;
       shippingBar.style.width = `${pct}%`;
     }
@@ -807,7 +903,86 @@ function renderCartDrawer() {
     return;
   }
 
-  if (footer) footer.style.display = 'block';
+  if (footer) {
+    footer.style.display = 'block';
+
+    const promoActive = state.promo && discountAmount > 0;
+    const isFreeShipping = subtotal >= FREE_SHIPPING_THRESHOLD;
+
+    footer.innerHTML = `
+      <!-- Promo Code Section -->
+      <div class="cart-promo-section" id="cartPromoSection">
+        ${promoActive ? `
+          <div class="cart-promo-applied">
+            <div class="cart-promo-applied-info">
+              <span class="cart-promo-applied-badge">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                  <path d="M20 6 9 17l-5-5"/>
+                </svg>
+                Промокод ${escapeHtml(state.promo.code)}
+              </span>
+              <span class="cart-promo-applied-desc">${escapeHtml(state.promo.label)} (-${formatPrice(discountAmount)})</span>
+            </div>
+            <button type="button" class="cart-promo-remove-btn" onclick="removePromoCode()" aria-label="Отменить промокод" title="Отменить промокод">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6 6 18M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+        ` : `
+          <form class="cart-promo-form" id="cartPromoForm" onsubmit="applyPromoCode(event)">
+            <div class="cart-promo-input-wrap">
+              <svg class="cart-promo-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                <line x1="7" y1="7" x2="7.01" y2="7"/>
+              </svg>
+              <input type="text" id="cartPromoInput" class="cart-promo-input" placeholder="Промокод (например: LILLE10)" autocomplete="off" autocapitalize="characters">
+              <button type="submit" class="cart-promo-btn" id="cartPromoSubmitBtn">Применить</button>
+            </div>
+            <div class="cart-promo-hints">
+              <span>Доступные:</span>
+              <button type="button" class="promo-hint-tag" onclick="quickApplyPromo('LILLE10')">LILLE10 (-10%)</button>
+              <button type="button" class="promo-hint-tag" onclick="quickApplyPromo('MERINO15')">MERINO15 (-15%)</button>
+            </div>
+            <div class="cart-promo-msg" id="cartPromoMsg" style="display: none;"></div>
+          </form>
+        `}
+      </div>
+
+      <!-- Financial Summary -->
+      <div class="cart-summary-row">
+        <span>Промежуточный итог:</span>
+        <span id="cartSubtotal">${formatPrice(subtotal)}</span>
+      </div>
+
+      ${promoActive ? `
+        <div class="cart-summary-row cart-discount-row">
+          <span>Скидка (${escapeHtml(state.promo.code)}):</span>
+          <span id="cartDiscount">-${formatPrice(discountAmount)}</span>
+        </div>
+      ` : ''}
+
+      <div class="cart-summary-row">
+        <span>Доставка:</span>
+        <span style="color: var(--color-success); font-weight: 500;">
+          ${isFreeShipping ? 'Бесплатно' : 'Рассчитывается при оформлении'}
+        </span>
+      </div>
+
+      <div class="cart-total-row">
+        <span>Итого к оплате:</span>
+        <span id="cartTotal">${formatPrice(finalTotal)}</span>
+      </div>
+
+      <button class="btn btn-primary" style="width: 100%; padding: 14px;" onclick="openCheckout()">
+        Оформить заказ • ${formatPrice(finalTotal)}
+      </button>
+
+      <div style="text-align: center; margin-top: 10px;">
+        <span style="font-size: 0.6875rem; color: var(--color-muted);">Безопасная оплата • Примерка при получении</span>
+      </div>
+    `;
+  }
 
   body.innerHTML = state.cart.map((item, index) => `
     <div class="cart-item">
@@ -831,11 +1006,6 @@ function renderCartDrawer() {
       </button>
     </div>
   `).join('');
-
-  const subEl = document.getElementById('cartSubtotal');
-  const totEl = document.getElementById('cartTotal');
-  if (subEl) subEl.textContent = formatPrice(totalAmount);
-  if (totEl) totEl.textContent = formatPrice(totalAmount);
 }
 
 // Drawer Cart Controls (Floating slide-over)
@@ -1035,8 +1205,18 @@ window.openCheckout = function() {
   }
   closeCart();
   const modal = document.getElementById('checkoutModal');
-  const totalAmount = state.cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-  document.getElementById('checkoutOrderTotal').textContent = formatPrice(totalAmount);
+  const subtotal = state.cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const discountAmount = calculateDiscount(subtotal);
+  const finalTotal = Math.max(0, subtotal - discountAmount);
+
+  const orderTotalEl = document.getElementById('checkoutOrderTotal');
+  if (orderTotalEl) {
+    if (state.promo && discountAmount > 0) {
+      orderTotalEl.innerHTML = `${formatPrice(finalTotal)} <span style="font-size: 0.8125rem; font-weight: normal; color: var(--color-success); margin-left: 6px;">(скидка ${formatPrice(discountAmount)} по промокоду ${escapeHtml(state.promo.code)})</span>`;
+    } else {
+      orderTotalEl.textContent = formatPrice(finalTotal);
+    }
+  }
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
 };
@@ -1049,17 +1229,21 @@ window.closeCheckout = function() {
 window.submitCheckout = function(e) {
   e.preventDefault();
   const name = document.getElementById('orderName').value;
-  const phone = document.getElementById('orderPhone').value;
-  const address = document.getElementById('orderAddress').value;
+  const subtotal = state.cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const discountAmount = calculateDiscount(subtotal);
+  const finalTotal = Math.max(0, subtotal - discountAmount);
+  const promoApplied = (state.promo && discountAmount > 0) ? ` с промокодом ${state.promo.code} (скидка ${formatPrice(discountAmount)})` : '';
 
-  // Clear cart
+  // Clear cart & promo
   state.cart = [];
+  state.promo = null;
   saveCart();
+  localStorage.removeItem('lille_promo');
   updateCartCounters();
   closeCheckout();
 
   // Show success modal or toast
-  showToast(`Спасибо за заказ, ${name}! Наш консультант свяжется с вами в течение 15 минут.`);
+  showToast(`Спасибо за заказ, ${name}! Заказ на ${formatPrice(finalTotal)}${promoApplied} успешно оформлен. Наш консультант свяжется с вами в течение 15 минут.`);
 };
 
 // Global Mobile Navigation & Search Controls
@@ -1427,7 +1611,17 @@ function initEventListeners() {
       e.preventDefault();
       const emailInput = document.getElementById('newsletterEmail');
       const email = emailInput ? emailInput.value : '';
-      showToast(`Промокод на скидку 10% отправлен на ${email}`);
+
+      // Auto-apply or grant LILLE10 promo code
+      state.promo = {
+        code: 'LILLE10',
+        type: 'percent',
+        value: 10,
+        label: 'Скидка 10% на первый заказ'
+      };
+      localStorage.setItem('lille_promo', JSON.stringify(state.promo));
+      renderCartDrawer();
+      showToast(`Промокод LILLE10 на скидку 10% применен к корзине! Копия отправлена на ${email}`);
       newsletterForm.reset();
     });
   }
