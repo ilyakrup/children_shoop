@@ -51,6 +51,14 @@
 
 ---
 
+## Telegram Mini App
+
+Каталог подготовлен для запуска в Telegram через бота [@LilleAtelierbot](https://t.me/LilleAtelierbot). Кнопка на сайте ведёт по ссылке `https://t.me/LilleAtelierbot?startapp=shop`, а `catalog.html` подключает Telegram Web Apps SDK и учитывает безопасные зоны интерфейса Telegram.
+
+Перед запуском разместите сайт на HTTPS-домене, затем в **@BotFather** откройте настройки `@LilleAtelierbot` и задайте адрес `https://ваш-домен/catalog.html` как Main Mini App. После этого та же ссылка откроет каталог прямо внутри Telegram.
+
+---
+
 ## 📁 Структура проекта
 
 ```text

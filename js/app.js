@@ -434,9 +434,8 @@ function calculateDiscount(subtotal) {
 const FREE_SHIPPING_THRESHOLD = 5000;
 
 // Telegram Mini App
-// Replace the placeholder with the deep link of the bot that owns your Mini App.
-// Example: https://t.me/lille_atelier_bot?startapp=shop
-const TELEGRAM_MINI_APP_URL = 'https://t.me/your_bot_username?startapp=shop';
+// Main Mini App deep link for @LilleAtelierbot.
+const TELEGRAM_MINI_APP_URL = 'https://t.me/LilleAtelierbot?startapp=shop';
 
 // Initialize on DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
@@ -477,6 +476,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initAccordions();
   initScrollReveal();
   injectTelegramMiniAppButton();
+  configureTelegramLinks();
+  initTelegramMiniApp();
 });
 
 // Keeps the Mini App entry point consistent on every catalogue page.
@@ -504,6 +505,34 @@ function injectTelegramMiniAppButton() {
     </svg>
   `;
   document.body.appendChild(telegramButton);
+}
+
+// Updates any Telegram links in shared footers and mobile navigation.
+function configureTelegramLinks() {
+  document.querySelectorAll('a[aria-label="Telegram"], a.mobile-social-pill').forEach(link => {
+    if (link.getAttribute('aria-label') === 'Telegram' || link.textContent.trim() === 'Telegram') {
+      link.href = TELEGRAM_MINI_APP_URL;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+    }
+  });
+}
+
+// Applies Telegram-specific presentation only when the catalogue is opened in a Mini App.
+function initTelegramMiniApp() {
+  const webApp = window.Telegram && window.Telegram.WebApp;
+  if (!webApp || !webApp.initData) return;
+
+  document.documentElement.classList.add('is-telegram-mini-app');
+
+  try {
+    webApp.ready();
+    webApp.expand();
+    webApp.setHeaderColor('#FAFAF9');
+    webApp.setBackgroundColor('#FAFAF9');
+  } catch (error) {
+    // Older Telegram clients may not support every visual customization method.
+  }
 }
 
 // Smooth Top-to-Bottom Scroll Reveal

@@ -3051,6 +3051,86 @@ input, select, textarea {
   }
 }
 
+/* ======================================================================
+   TELEGRAM MINI APP CATALOGUE
+   ====================================================================== */
+.is-telegram-mini-app body {
+  min-height: var(--tg-viewport-stable-height, 100vh);
+  padding-bottom: calc(var(--tg-content-safe-area-inset-bottom, 0px) + var(--space-lg));
+}
+
+.is-telegram-mini-app .announcement-bar,
+.is-telegram-mini-app .site-footer,
+.is-telegram-mini-app .telegram-mini-app-button {
+  display: none;
+}
+
+.is-telegram-mini-app .site-header {
+  position: relative;
+  top: auto;
+  background-color: var(--color-background);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.is-telegram-mini-app .header-inner {
+  height: 68px;
+  padding-top: var(--tg-content-safe-area-inset-top, 0px);
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.is-telegram-mini-app .header-left,
+.is-telegram-mini-app .mobile-menu-toggle {
+  display: none !important;
+}
+
+.is-telegram-mini-app .brand-logo {
+  grid-column: 1;
+  justify-self: start;
+  text-align: left;
+  padding: 0;
+}
+
+.is-telegram-mini-app .header-right {
+  grid-column: 2;
+}
+
+.is-telegram-mini-app .catalog-section {
+  padding-top: var(--space-lg);
+  padding-bottom: var(--space-xl);
+}
+
+.is-telegram-mini-app .catalog-breadcrumbs {
+  display: none;
+}
+
+.is-telegram-mini-app .drawer-cart {
+  padding-bottom: var(--tg-content-safe-area-inset-bottom, 0px);
+}
+
+.is-telegram-mini-app .toast-container {
+  bottom: calc(var(--tg-content-safe-area-inset-bottom, 0px) + var(--space-lg));
+}
+
+@media (max-width: 768px) {
+  .is-telegram-mini-app .header-inner {
+    height: calc(60px + var(--tg-content-safe-area-inset-top, 0px));
+    padding-top: var(--tg-content-safe-area-inset-top, 0px);
+  }
+
+  .is-telegram-mini-app .brand-logo .logo-title {
+    font-size: 1.2rem;
+  }
+
+  .is-telegram-mini-app .header-actions {
+    gap: 5px;
+  }
+
+  .is-telegram-mini-app .catalog-section {
+    padding-top: var(--space-md);
+  }
+}
+
 @keyframes slideInToast {
   from {
     opacity: 0;
