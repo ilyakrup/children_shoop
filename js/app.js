@@ -433,6 +433,11 @@ function calculateDiscount(subtotal) {
 // Free Shipping Threshold
 const FREE_SHIPPING_THRESHOLD = 5000;
 
+// Telegram Mini App
+// Replace the placeholder with the deep link of the bot that owns your Mini App.
+// Example: https://t.me/lille_atelier_bot?startapp=shop
+const TELEGRAM_MINI_APP_URL = 'https://t.me/your_bot_username?startapp=shop';
+
 // Initialize on DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
   if (window.PAGE_CATEGORY) {
@@ -471,7 +476,35 @@ document.addEventListener('DOMContentLoaded', () => {
   initSmartSearch();
   initAccordions();
   initScrollReveal();
+  injectTelegramMiniAppButton();
 });
+
+// Keeps the Mini App entry point consistent on every catalogue page.
+function injectTelegramMiniAppButton() {
+  if (document.getElementById('telegramMiniAppButton')) return;
+
+  const telegramButton = document.createElement('a');
+  telegramButton.id = 'telegramMiniAppButton';
+  telegramButton.className = 'telegram-mini-app-button';
+  telegramButton.href = TELEGRAM_MINI_APP_URL;
+  telegramButton.target = '_blank';
+  telegramButton.rel = 'noopener noreferrer';
+  telegramButton.setAttribute('aria-label', 'Открыть магазин Lille Atelier в Telegram');
+  telegramButton.title = 'Открыть магазин в Telegram';
+  telegramButton.innerHTML = `
+    <svg class="telegram-mini-app-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M21.55 3.46 18.3 20.1c-.25 1.17-.91 1.46-1.84.91l-5.08-3.74-2.45 2.36c-.27.27-.5.5-1.02.5l.36-5.17 9.4-8.49c.41-.36-.09-.56-.63-.2L5.42 13.59.42 12.03c-1.09-.34-1.11-1.09.23-1.62L20.2 2.88c.91-.34 1.7.2 1.35.58Z"/>
+    </svg>
+    <span class="telegram-mini-app-copy">
+      <span class="telegram-mini-app-eyebrow">Lille Atelier в Telegram</span>
+      <span class="telegram-mini-app-label">Открыть магазин</span>
+    </span>
+    <svg class="telegram-mini-app-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="m9 18 6-6-6-6"/>
+    </svg>
+  `;
+  document.body.appendChild(telegramButton);
+}
 
 // Smooth Top-to-Bottom Scroll Reveal
 function initScrollReveal() {

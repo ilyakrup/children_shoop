@@ -2966,6 +2966,91 @@ input, select, textarea {
   animation: slideInToast 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* ======================================================================
+   TELEGRAM MINI APP ENTRY POINT
+   ====================================================================== */
+.telegram-mini-app-button {
+  position: fixed;
+  right: var(--space-xl);
+  bottom: var(--space-xl);
+  z-index: 115;
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 56px;
+  padding: 9px 12px 9px 10px;
+  color: #FFFFFF;
+  background: #229ED9;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: var(--radius-full);
+  box-shadow: 0 12px 28px rgba(34, 158, 217, 0.28);
+  transition: background-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+.telegram-mini-app-button:hover {
+  background: #168BC2;
+  box-shadow: 0 16px 32px rgba(34, 158, 217, 0.36);
+  transform: translateY(-2px);
+}
+
+.telegram-mini-app-button:active {
+  background: #117AAC;
+  transform: translateY(0);
+}
+
+.telegram-mini-app-button:focus-visible {
+  outline-color: #FFFFFF;
+  outline-offset: 4px;
+}
+
+.telegram-mini-app-icon {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  padding: 8px;
+  fill: currentColor;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 50%;
+}
+
+.telegram-mini-app-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.telegram-mini-app-eyebrow {
+  font-size: 0.5625rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.84;
+}
+
+.telegram-mini-app-label {
+  margin-top: 3px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.telegram-mini-app-arrow {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .telegram-mini-app-button {
+    transition: none;
+  }
+}
+
 @keyframes slideInToast {
   from {
     opacity: 0;
@@ -3621,6 +3706,18 @@ input, select, textarea {
     padding: 10px 14px;
     width: 100%;
   }
+
+  .telegram-mini-app-button {
+    right: 16px;
+    bottom: 16px;
+    min-height: 52px;
+  }
+
+  .telegram-mini-app-icon {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+  }
 }
 
 /* Extra Small Phones (< 480px) */
@@ -3684,6 +3781,21 @@ input, select, textarea {
   .action-btn {
     width: 30px;
     height: 30px;
+  }
+
+  .telegram-mini-app-button {
+    right: 12px;
+    bottom: 12px;
+    gap: 8px;
+    padding-right: 10px;
+  }
+
+  .telegram-mini-app-eyebrow {
+    font-size: 0.5rem;
+  }
+
+  .telegram-mini-app-label {
+    font-size: 0.6875rem;
   }
 
   .mobile-nav-drawer {
