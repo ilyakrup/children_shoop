@@ -434,8 +434,8 @@ function calculateDiscount(subtotal) {
 const FREE_SHIPPING_THRESHOLD = 5000;
 
 // Telegram Mini App
-// Main Mini App deep link for @LilleAtelierbot.
-const TELEGRAM_MINI_APP_URL = 'https://t.me/LilleAtelierbot?startapp=shop';
+// Direct Mini App deep link for @LilleAtelierbot (catalog is the app short name).
+const TELEGRAM_MINI_APP_URL = 'https://t.me/LilleAtelierbot/catalog';
 
 // Initialize on DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
